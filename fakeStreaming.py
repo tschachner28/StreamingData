@@ -1,7 +1,6 @@
 import time
 import warnings
 
-
 def fake_streaming(channels, callback, time_start, duration=5, ni_fs=1000):
     from math import sin
     import numpy as np

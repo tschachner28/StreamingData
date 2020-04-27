@@ -1,6 +1,6 @@
 import numpy as np
 from fakeStreaming import *
-
+import matplotlib.pyplot as plt
 import warnings
 
 CALIBRATION = [53, 51.9]  ##Modl [77(RIGHT),76(LEFT)]
@@ -16,7 +16,7 @@ class signal_processor(object):
         ref_inx: index number for the channel list of which arm is the reference arm
         """
         savetag_cali = 'testStreaming0427'
-        savedir = '/Users/ncr5341/Documents/GitWorkSpace/disco/Streaming/data/'
+        savedir = '/Users/thereseschachner/Desktop/Arm_Torque_Game/StreamingData/'
         self.savepath_cali = savedir + savetag_cali + '.csv'
 
         self.channels = channels
@@ -73,7 +73,6 @@ class signal_processor(object):
         tag=str i.e 'reference'
         """
         row = ''
-
         for a in array:
             for d in a[0]:  # data
                 row += str(d)
@@ -83,6 +82,18 @@ class signal_processor(object):
         with open(savepath, 'a') as f:
             f.write(row)
             print('wrote to file')
+
+        # Plot the data
+        array_np = np.array(array)
+        array_data = array_np[:,0]
+        timestamps = array_np[:,1]
+        all_data = np.array([np.array(xi) for xi in array_data])
+        data = all_data[:,0]
+
+        plt.figure(figsize=(50, 5))
+        plt.plot(timestamps, data)
+        plt.savefig('graph.png')
+        plt.show()
 
 
 def main():

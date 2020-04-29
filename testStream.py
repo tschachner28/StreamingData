@@ -72,6 +72,7 @@ class signal_processor(object):
         [sensor_data,sensor_data,...]
         tag=str i.e 'reference'
         """
+
         row = ''
         for a in array:
             for d in a[0]:  # data
@@ -83,17 +84,49 @@ class signal_processor(object):
             f.write(row)
             print('wrote to file')
 
-        # Plot the data
+        # Save and plot the sin function data
         array_np = np.array(array)
         array_data = array_np[:,0]
         timestamps = array_np[:,1]
         all_data = np.array([np.array(xi) for xi in array_data])
-        data = all_data[:,0]
+        data = all_data[:,0] + all_data[:,1]
 
-        plt.figure(figsize=(50, 5))
+        plt.figure(figsize=(4, 3))
         plt.plot(timestamps, data)
-        plt.savefig('graph.png')
+        plt.title('Torque: Sin Function')
+        plt.xlabel('Time (s)')
+        plt.ylabel('Torque (Nm)')
+        plt.savefig('sin_graph_torque.png')
         plt.show()
+
+        # Save and plot the ramp function data
+        ramp_data = ramp_function(timestamps, 0.5, 0) + ramp_function(timestamps, -0.75, 2.5)
+        #max_ramp_torque = max(ramp_data)
+        #max_ramp_time = np.where(ramp_data == max_ramp_torque)[0][0]
+        #print('Max torque in ramp function: ', max_ramp_torque)
+        with open('testStreamingRamp.csv', 'w') as f:
+            for i in range(0,timestamps.shape[0]):
+                line = str(timestamps[i]) + ', ' + str(ramp_data[i])
+                print(line, file=f)
+        plt.figure(figsize = (6,4))
+        plt.plot(timestamps, ramp_data)
+        plt.title('Torque: Ramp Function')
+        plt.xlabel('Time (s)')
+        plt.ylabel('Torque (Nm)')
+        plt.savefig('ramp_graph_torque')
+        plt.show()
+
+
+
+
+
+def ramp_function(time, slope, offset):
+    length = len(time)
+    torque = np.zeros(length)
+    for i in range(0,length):
+        if time[i] >= offset:
+            torque[i] = slope * (time[i] + offset)
+    return torque
 
 
 def main():

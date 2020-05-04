@@ -91,8 +91,10 @@ class signal_processor(object):
         all_data = np.array([np.array(xi) for xi in array_data])
         data = all_data[:,0] + all_data[:,1]
 
-        plt.figure(figsize=(4, 3))
-        plt.plot(timestamps, data)
+        plt.figure(figsize=(6, 4))
+        timestamps_to_plot = timestamps[0::5000]
+        torque_to_plot = data[0::5000]
+        plt.plot(timestamps_to_plot, torque_to_plot) # choose points to plot so that sin wave is distinct
         plt.title('Torque: Sin Function')
         plt.xlabel('Time (s)')
         plt.ylabel('Torque (Nm)')
@@ -108,7 +110,7 @@ class signal_processor(object):
             for i in range(0,timestamps.shape[0]):
                 line = str(timestamps[i]) + ', ' + str(ramp_data[i])
                 print(line, file=f)
-        plt.figure(figsize = (6,4))
+        plt.figure(figsize = (10,4))
         plt.plot(timestamps, ramp_data)
         plt.title('Torque: Ramp Function')
         plt.xlabel('Time (s)')
